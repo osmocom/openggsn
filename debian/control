@@ -5,8 +5,8 @@ Maintainer: Harald Welte <laforge@gnumonks.org>
 Build-Depends: debhelper (>= 7.0.50~), autotools-dev, pkg-config
 Standards-Version: 3.8.4
 Homepage: http://sourceforge.net/projects/ggsn/
-Vcs-Git: git://ggsn.git.sourceforge.net/gitroot/ggsn/ggsn
-Vcs-Browser: http://ggsn.git.sourceforge.net/git/gitweb.cgi?p=ggsn/ggsn;a=summary
+Vcs-Git: git://git.osmocom.org/openggsn
+Vcs-Browser: http://cgit.osmocom.org/cgit/openggsn/
 
 Package: openggsn
 Architecture: any
@@ -16,4 +16,18 @@ Description: Gateway GPRS Support Node
 Package: libgtp
 Architecture: any
 Section: libs
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: library implementing the GTP protocol between SGSN and GGSN
+
+Package: libgtp-dev
+Section: libdevel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgtp
+Description: Development headers for libgtb
+
+Package: libgtp-dbg
+Section: libdevel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgtp
+Description: Debug symbols for libgtb
+
