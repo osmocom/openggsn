@@ -20,3 +20,13 @@ CFLAGS = -Wall -g
 
 %:
 	dh --with autoreconf $@
+
+override_dh_strip:
+	dh_strip -p openggsn --dbg-package=openggsn-dbg
+	dh_strip -p libgtp --dbg-package=libgtp-dbg
+	dh_strip --remaining-packages
+
+override_dh_installdocs:
+	dh_installdocs -p openggsn-dbg --link-doc=openggsn
+	dh_installdocs -p libgtp-dbg --link-doc=libgtp
+	dh_installdocs --remaining-packages

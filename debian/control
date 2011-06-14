@@ -13,6 +13,12 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Gateway GPRS Support Node
 
+Package: openggsn-dbg
+Section: debug
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, openggsn
+Description: Debug symbols for openggsn
+
 Package: libgtp
 Architecture: any
 Section: libs
@@ -26,7 +32,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, libgtp
 Description: Development headers for libgtb
 
 Package: libgtp-dbg
-Section: libdevel
+Section: debug
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libgtp
 Description: Debug symbols for libgtb
