@@ -1,3 +1,9 @@
+openggsn (0.91-3) osmo-experimental; urgency=low
+
+  * Change packaging to something similar to openbsc
+
+ -- Jan Lübbe <jluebbe@debian.org>  Tue, 14 Jun 2011 14:47:48 +0200
+
 openggsn (0.91-2) unstable; urgency=low
 
   * Switch to source/format (git)
