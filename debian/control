@@ -2,7 +2,7 @@ Source: openggsn
 Section: net
 Priority: optional
 Maintainer: Harald Welte <laforge@gnumonks.org>
-Build-Depends: debhelper (>= 7.0.50~), autotools-dev, pkg-config
+Build-Depends: debhelper (>= 7.0.50~), dh-autoreconf, autotools-dev, pkg-config
 Standards-Version: 3.8.4
 Homepage: http://sourceforge.net/projects/ggsn/
 Vcs-Git: git://git.osmocom.org/openggsn
