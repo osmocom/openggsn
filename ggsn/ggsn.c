@@ -53,6 +53,7 @@
 #include "../gtp/pdp.h"
 #include "../gtp/gtp.h"
 #include "cmdline.h"
+#include "gtp-kernel.h"
 
 int end = 0;
 int maxfd = 0;			/* For select()            */
@@ -150,6 +151,13 @@ int delete_context(struct pdp_t *pdp)
 		ippool_freeip(ippool, (struct ippoolm_t *)pdp->peer);
 	else
 		sys_err(LOG_ERR, __FILE__, __LINE__, 0, "Peer not defined!");
+
+	if (gtp_kernel_tunnel_del(pdp)) {
+		sys_err(LOG_ERR, __FILE__, __LINE__, 0,
+			"Cannot delete tunnel from kernel: %s\n",
+			strerror(errno));
+	}
+
 	return 0;
 }
 
@@ -183,6 +191,11 @@ int create_context_ind(struct pdp_t *pdp)
 	pdp->peer = member;
 	pdp->ipif = tun;	/* TODO */
 	member->peer = pdp;
+
+	if (gtp_kernel_tunnel_add(pdp) < 0) {
+		sys_err(LOG_ERR, __FILE__, __LINE__, 0,
+			"Cannot add tunnel to kernel: %s\n", strerror(errno));
+	}
 
 	gtp_create_context_resp(gsn, pdp, GTPCAUSE_ACC_REQ);
 	return 0;		/* Success */
@@ -275,6 +288,8 @@ int main(int argc, char **argv)
 			printf("pidfile: %s\n", args_info.pidfile_arg);
 		if (args_info.statedir_arg)
 			printf("statedir: %s\n", args_info.statedir_arg);
+		if (args_info.gtpnl_arg)
+			printf("gtpnl: %s\n", args_info.gtpnl_arg);
 		printf("timelimit: %d\n", args_info.timelimit_arg);
 	}
 
@@ -318,6 +333,8 @@ int main(int argc, char **argv)
 			printf("pidfile: %s\n", args_info.pidfile_arg);
 		if (args_info.statedir_arg)
 			printf("statedir: %s\n", args_info.statedir_arg);
+		if (args_info.gtpnl_arg)
+			printf("gtpnl: %s\n", args_info.gtpnl_arg);
 		printf("timelimit: %d\n", args_info.timelimit_arg);
 	}
 
@@ -517,9 +534,17 @@ int main(int argc, char **argv)
 	if (gsn->fd1u > maxfd)
 		maxfd = gsn->fd1u;
 
+	/* use GTP kernel module for data packet encapsulation */
+	if (gtp_kernel_init(gsn, &net, &mask, &args_info) < 0)
+		goto err;
+
 	gtp_set_cb_data_ind(gsn, encaps_tun);
 	gtp_set_cb_delete_context(gsn, delete_context);
 	gtp_set_cb_create_context_ind(gsn, create_context_ind);
+
+	/* skip the configuration of the tun0 if we're using the gtp0 device */
+	if (gtp_kernel_enabled())
+		goto skip_tun;
 
 	/* Create a tunnel interface */
 	if (debug)
@@ -547,6 +572,8 @@ int main(int argc, char **argv)
 
 	if (ipup)
 		tun_runscript(tun, ipup);
+
+skip_tun:
 
   /******************************************************************/
 	/* Main select loop                                               */
@@ -578,7 +605,7 @@ int main(int argc, char **argv)
 			break;
 		}
 
-		if (tun->fd != -1 && FD_ISSET(tun->fd, &fds) &&
+		if (tun && tun->fd != -1 && FD_ISSET(tun->fd, &fds) &&
 		    tun_decaps(tun) < 0) {
 			sys_err(LOG_ERR, __FILE__, __LINE__, 0,
 				"TUN read failed (fd)=(%d)", tun->fd);
@@ -594,11 +621,13 @@ int main(int argc, char **argv)
 			gtp_decaps1u(gsn);
 
 	}
-
+err:
+	gtp_kernel_stop();
 	cmdline_parser_free(&args_info);
 	ippool_free(ippool);
 	gtp_free(gsn);
-	tun_free(tun);
+	if (tun)
+		tun_free(tun);
 
 	return 1;
 
