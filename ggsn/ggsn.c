@@ -274,6 +274,8 @@ int main(int argc, char **argv)
 		}
 		log_set_all_filter(tgt, 1);
 		log_set_use_color(tgt, 0);
+		log_set_print_extended_timestamp(tgt, 1);
+		log_set_print_category(tgt, 1);
 
 		if (args_info.loglevel_arg) {
 			lvl = log_parse_level(args_info.loglevel_arg);
