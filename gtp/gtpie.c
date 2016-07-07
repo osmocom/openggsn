@@ -391,6 +391,7 @@ int gtpie_decaps(union gtpie_member *ie[], int version, void *pack,
 		case GTPIE_TRIGGER_ID:
 		case GTPIE_OMC_ID:
 		case GTPIE_CHARGING_ADDR:
+		case GTPIE_COMMON_FLAGS:
 		case GTPIE_RAT_TYPE:
 		case GTPIE_USER_LOC:
 		case GTPIE_MS_TZ:
