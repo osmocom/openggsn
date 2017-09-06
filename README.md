@@ -1,3 +1,5 @@
+** As of September 2017, OpenGGSN is obsoleted by OsmoGGSN, please use http://git.osmocom.org/osmo-ggsn/ instead**
+
 OpenGGSN - Open Source GGSN
 ===========================
 
@@ -9,6 +11,8 @@ OpenGGSN is part of the [Osmocom](https://osmocom.org/) Open Source
 Mobile Communications projects, even thogh it was previously developed
 by Mondru AB.
 
+** As of September 2017, OpenGGSN is obsoleted by OsmoGGSN, please use http://git.osmocom.org/osmo-ggsn/ instead**
+
 Homepage
 --------
 
@@ -18,6 +22,9 @@ https://osmocom.org/projects/openggsn/wiki
 GIT Repository
 --------------
 
+** As of September 2017, OpenGGSN is obsoleted by OsmoGGSN, please use http://git.osmocom.org/osmo-ggsn/ instead**
+
+Homepage
 You can clone from the official libosmocore.git repository using
 
 	git clone git://git.osmocom.org/openggsn.git
