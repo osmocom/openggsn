@@ -34,6 +34,6 @@ set -x
 
 cd "$base"
 autoreconf --install --force
-./configure
+./configure $GTP
 $MAKE $PARALLEL_MAKE
 $MAKE distcheck
